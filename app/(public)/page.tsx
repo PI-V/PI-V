@@ -13,8 +13,8 @@ export default async function Home() {
     <div className="flex min-h-screen flex-col items-center">
       <LandingHeader />
       <main className="flex-1 w-full flex flex-col items-center">
-        <div className="flex-grow flex items-center justify-center my-6">
-          {!!session?.user && (
+        {!!session?.user && (
+          <div className="flex-grow flex items-center justify-center my-6">
             <div className="text-center space-y-6">
               <div className="space-y-2">
                 <h2 className="text-2xl font-semibold">
@@ -25,8 +25,8 @@ export default async function Home() {
                 </p>
               </div>
             </div>
-          )}
-        </div>
+          </div>
+        )}
 
         {/* Hero Section */}
         <section className="w-full py-12 md:py-24 lg:py-32 bg-gradient-to-b from-white to-gray-100 dark:from-gray-900 dark:to-gray-950 flex justify-center">
