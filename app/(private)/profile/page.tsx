@@ -13,7 +13,7 @@ export default async function Profile() {
   }
 
   return (
-    <main className="container mx-auto p-4 h-screen flex flex-col">
+    <main className="container mx-auto p-4 h-screen flex flex-col no-scrollbar overflow-y-auto">
       <div className="max-w-md w-full mx-auto mt-10 p-6 bg-muted/80 rounded-lg shadow-md">
         <h1 className="text-2xl font-bold mb-4">Seu Perfil</h1>
 
@@ -40,7 +40,7 @@ export default async function Profile() {
           </div>
 
           <div className="pt-4 flex flex-col space-y-2">
-            <Link href="/">
+            <Link href="/dashboard">
               <Button variant="outline" className="w-full">
                 Voltar para Home
               </Button>
