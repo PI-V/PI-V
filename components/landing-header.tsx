@@ -12,26 +12,6 @@ export async function LandingHeader() {
         <Link href="/" className="flex items-center gap-2">
           <span className="text-xl font-bold">KanbanApp</span>
         </Link>
-        <nav className="ml-auto flex gap-4 sm:gap-6">
-          <Link
-            href="#features"
-            className="text-sm font-medium hover:underline underline-offset-4"
-          >
-            Recursos
-          </Link>
-          <Link
-            href="#pricing"
-            className="text-sm font-medium hover:underline underline-offset-4"
-          >
-            Preços
-          </Link>
-          <Link
-            href="#faq"
-            className="text-sm font-medium hover:underline underline-offset-4"
-          >
-            FAQ
-          </Link>
-        </nav>
         <div className="ml-auto flex items-center gap-2">
           <ModeToggle />
           {session?.user ? (

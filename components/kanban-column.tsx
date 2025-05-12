@@ -1,26 +1,70 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Draggable, Droppable } from "@hello-pangea/dnd"
-import { MoreHorizontal, Plus } from "lucide-react"
+import { useState, useEffect } from "react";
+import { Draggable, Droppable } from "@hello-pangea/dnd";
+import { MoreHorizontal, Plus, Settings } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 
-import type { ColumnType } from "./kanban-board"
-import { KanbanCard } from "./kanban-card"
-import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
+import type { ColumnType } from "@/app/(private)/dashboard/boards/[id]/board-detail";
+import { KanbanCard, ExtendedCardType } from "./kanban-card";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { NotificationTemplateEditor } from "./notification-template-editor";
+import { CreateCardModal } from "./create-card-modal";
+
+// Define Zod schema for column validation
+const columnSchema = z.object({
+  title: z.string().min(1, { message: "O título é obrigatório" }).max(50, {
+    message: "O título não pode ter mais de 50 caracteres",
+  }),
+});
+
+type ColumnFormValues = z.infer<typeof columnSchema>;
+
+// Define o tipo para os dados do cartão a ser criado
+type CreateCardData = {
+  content: string;
+  description?: string;
+  priority: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
+  contactId: string;
+  columnId: string;
+};
 
 interface KanbanColumnProps {
-  column: ColumnType
-  index: number
-  addCard: (columnId: string, content: string, description?: string) => void
-  updateCard: (columnId: string, cardId: string, content: string, description?: string) => void
-  deleteCard: (columnId: string, cardId: string) => void
-  updateColumnTitle: (columnId: string, title: string) => void
-  deleteColumn: (columnId: string) => void
+  column: ColumnType;
+  index: number;
+  addCard: (
+    columnId: string,
+    content: string,
+    description?: string,
+    priority?: "LOW" | "MEDIUM" | "HIGH" | "URGENT",
+    contactId?: string
+  ) => void;
+  updateCard: (
+    columnId: string,
+    cardId: string,
+    data: Partial<ExtendedCardType>
+  ) => void;
+  deleteCard: (columnId: string, cardId: string) => void;
+  updateColumnTitle: (columnId: string, title: string) => void;
+  deleteColumn: (columnId: string) => void;
+  boardTitle: string;
 }
 
 export function KanbanColumn({
@@ -31,26 +75,48 @@ export function KanbanColumn({
   deleteCard,
   updateColumnTitle,
   deleteColumn,
+  boardTitle,
 }: KanbanColumnProps) {
-  const [isAddCardOpen, setIsAddCardOpen] = useState(false)
-  const [isEditColumnOpen, setIsEditColumnOpen] = useState(false)
-  const [newCardContent, setNewCardContent] = useState("")
-  const [newCardDescription, setNewCardDescription] = useState("")
-  const [columnTitle, setColumnTitle] = useState(column.title)
+  const [isAddCardOpen, setIsAddCardOpen] = useState(false);
+  const [isEditColumnOpen, setIsEditColumnOpen] = useState(false);
 
-  const handleAddCard = () => {
-    if (!newCardContent.trim()) return
-    addCard(column.id, newCardContent, newCardDescription)
-    setNewCardContent("")
-    setNewCardDescription("")
-    setIsAddCardOpen(false)
-  }
+  // Form for editing column title
+  const {
+    register: registerColumn,
+    handleSubmit: handleSubmitColumn,
+    formState: { errors: columnErrors },
+    setValue: setColumnValue,
+  } = useForm<ColumnFormValues>({
+    resolver: zodResolver(columnSchema),
+    defaultValues: {
+      title: column.title,
+    },
+  });
 
-  const handleUpdateColumn = () => {
-    if (!columnTitle.trim()) return
-    updateColumnTitle(column.id, columnTitle)
-    setIsEditColumnOpen(false)
-  }
+  // Update column form values when the column title changes
+  useEffect(() => {
+    setColumnValue("title", column.title);
+  }, [column.title, setColumnValue]);
+
+  const handleAddCardSubmit = async (data: CreateCardData) => {
+    try {
+      await addCard(
+        column.id,
+        data.content,
+        data.description,
+        data.priority,
+        data.contactId
+      );
+      setIsAddCardOpen(false);
+    } catch (error) {
+      console.error("Error adding card:", error);
+    }
+  };
+
+  const handleUpdateColumnSubmit = (data: ColumnFormValues) => {
+    updateColumnTitle(column.id, data.title);
+    setIsEditColumnOpen(false);
+  };
 
   return (
     <Draggable draggableId={column.id} index={index}>
@@ -76,9 +142,27 @@ export function KanbanColumn({
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={() => setIsEditColumnOpen(true)}>Edit Column</DropdownMenuItem>
-                  <DropdownMenuItem className="text-destructive" onClick={() => deleteColumn(column.id)}>
-                    Delete Column
+                  <DropdownMenuItem onClick={() => setIsEditColumnOpen(true)}>
+                    Editar Coluna
+                  </DropdownMenuItem>
+                  <NotificationTemplateEditor
+                    columnId={column.id}
+                    columnTitle={column.title}
+                    boardTitle={boardTitle}
+                    trigger={
+                      <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                        <div className="flex items-center">
+                          <Settings className="mr-2 h-4 w-4" />
+                          Configurar Notificações
+                        </div>
+                      </DropdownMenuItem>
+                    }
+                  />
+                  <DropdownMenuItem
+                    className="text-destructive"
+                    onClick={() => deleteColumn(column.id)}
+                  >
+                    Excluir Coluna
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -90,12 +174,14 @@ export function KanbanColumn({
               <div
                 ref={provided.innerRef}
                 {...provided.droppableProps}
-                className={`flex-1 p-2 overflow-y-auto ${snapshot.isDraggingOver ? "bg-accent/50" : ""}`}
+                className={`flex-1 p-2 overflow-y-auto ${
+                  snapshot.isDraggingOver ? "bg-accent/50" : ""
+                }`}
               >
                 {column.cards.map((card, index) => (
                   <KanbanCard
                     key={card.id}
-                    card={card}
+                    card={card as ExtendedCardType}
                     index={index}
                     columnId={column.id}
                     updateCard={updateCard}
@@ -114,69 +200,52 @@ export function KanbanColumn({
               onClick={() => setIsAddCardOpen(true)}
             >
               <Plus className="mr-2 h-4 w-4" />
-              Add Card
+              Adicionar Cartão
             </Button>
           </div>
 
-          {/* Add Card Dialog */}
-          <Dialog open={isAddCardOpen} onOpenChange={setIsAddCardOpen}>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Add New Card</DialogTitle>
-              </DialogHeader>
-              <div className="grid gap-4 py-4">
-                <div className="grid gap-2">
-                  <Label htmlFor="title">Card Title</Label>
-                  <Input
-                    id="title"
-                    value={newCardContent}
-                    onChange={(e) => setNewCardContent(e.target.value)}
-                    placeholder="Enter card title"
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="description">Description (optional)</Label>
-                  <Textarea
-                    id="description"
-                    value={newCardDescription}
-                    onChange={(e) => setNewCardDescription(e.target.value)}
-                    placeholder="Enter card description"
-                    rows={3}
-                  />
-                </div>
-              </div>
-              <DialogFooter>
-                <Button variant="outline" onClick={() => setIsAddCardOpen(false)}>
-                  Cancel
-                </Button>
-                <Button onClick={handleAddCard}>Add Card</Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+          {/* Use our new CreateCardModal component */}
+          <CreateCardModal
+            isOpen={isAddCardOpen}
+            onClose={() => setIsAddCardOpen(false)}
+            onCreateCard={handleAddCardSubmit}
+            columnId={column.id}
+          />
 
           {/* Edit Column Dialog */}
           <Dialog open={isEditColumnOpen} onOpenChange={setIsEditColumnOpen}>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Edit Column</DialogTitle>
+                <DialogTitle>Editar Coluna</DialogTitle>
               </DialogHeader>
-              <div className="grid gap-4 py-4">
+              <form
+                onSubmit={handleSubmitColumn(handleUpdateColumnSubmit)}
+                className="grid gap-4 py-4"
+              >
                 <div className="grid gap-2">
-                  <Label htmlFor="columnTitle">Column Title</Label>
-                  <Input id="columnTitle" value={columnTitle} onChange={(e) => setColumnTitle(e.target.value)} />
+                  <Label htmlFor="columnTitle">Título da Coluna</Label>
+                  <Input id="columnTitle" {...registerColumn("title")} />
+                  {columnErrors.title && (
+                    <p className="text-destructive text-sm">
+                      {columnErrors.title.message}
+                    </p>
+                  )}
                 </div>
-              </div>
-              <DialogFooter>
-                <Button variant="outline" onClick={() => setIsEditColumnOpen(false)}>
-                  Cancel
-                </Button>
-                <Button onClick={handleUpdateColumn}>Save Changes</Button>
-              </DialogFooter>
+                <DialogFooter>
+                  <Button
+                    variant="outline"
+                    onClick={() => setIsEditColumnOpen(false)}
+                    type="button"
+                  >
+                    Cancelar
+                  </Button>
+                  <Button type="submit">Salvar Alterações</Button>
+                </DialogFooter>
+              </form>
             </DialogContent>
           </Dialog>
         </div>
       )}
     </Draggable>
-  )
+  );
 }
-

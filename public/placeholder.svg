@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="600" height="350" viewBox="0 0 600 350" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background with gradient -->
+  <rect width="600" height="350" fill="url(#gradient)" rx="10" ry="10" />
+  
+  <!-- Gradient definition -->
+  <defs>
+    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#8b5cf6" stop-opacity="0.8" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Dashboard elements -->
+  <!-- Header -->
+  <rect x="20" y="20" width="560" height="40" rx="5" ry="5" fill="white" opacity="0.2" />
+  <circle cx="40" cy="40" r="10" fill="white" opacity="0.5" />
+  <rect x="60" y="35" width="100" height="10" rx="2" ry="2" fill="white" opacity="0.5" />
+  <rect x="460" y="35" width="100" height="10" rx="2" ry="2" fill="white" opacity="0.5" />
+  
+  <!-- Left sidebar -->
+  <rect x="20" y="70" width="120" height="260" rx="5" ry="5" fill="white" opacity="0.15" />
+  <rect x="35" y="90" width="90" height="10" rx="2" ry="2" fill="white" opacity="0.3" />
+  <rect x="35" y="110" width="90" height="10" rx="2" ry="2" fill="white" opacity="0.3" />
+  <rect x="35" y="130" width="90" height="10" rx="2" ry="2" fill="white" opacity="0.3" />
+  <rect x="35" y="150" width="90" height="10" rx="2" ry="2" fill="white" opacity="0.3" />
+  <rect x="35" y="170" width="90" height="10" rx="2" ry="2" fill="white" opacity="0.3" />
+  
+  <!-- Kanban board -->
+  <rect x="150" y="70" width="430" height="260" rx="5" ry="5" fill="white" opacity="0.1" />
+  
+  <!-- Column 1 -->
+  <rect x="160" y="80" width="130" height="240" rx="5" ry="5" fill="white" opacity="0.15" />
+  <rect x="170" y="90" width="110" height="20" rx="3" ry="3" fill="white" opacity="0.3" />
+  
+  <!-- Cards in column 1 -->
+  <rect x="170" y="120" width="110" height="50" rx="3" ry="3" fill="white" opacity="0.3" />
+  <rect x="170" y="180" width="110" height="50" rx="3" ry="3" fill="white" opacity="0.3" />
+  <rect x="170" y="240" width="110" height="50" rx="3" ry="3" fill="white" opacity="0.3" />
+  
+  <!-- Column 2 -->
+  <rect x="300" y="80" width="130" height="240" rx="5" ry="5" fill="white" opacity="0.15" />
+  <rect x="310" y="90" width="110" height="20" rx="3" ry="3" fill="white" opacity="0.3" />
+  
+  <!-- Cards in column 2 -->
+  <rect x="310" y="120" width="110" height="50" rx="3" ry="3" fill="white" opacity="0.3" />
+  <rect x="310" y="180" width="110" height="50" rx="3" ry="3" fill="white" opacity="0.3" />
+  
+  <!-- Column 3 -->
+  <rect x="440" y="80" width="130" height="240" rx="5" ry="5" fill="white" opacity="0.15" />
+  <rect x="450" y="90" width="110" height="20" rx="3" ry="3" fill="white" opacity="0.3" />
+  
+  <!-- Cards in column 3 -->
+  <rect x="450" y="120" width="110" height="50" rx="3" ry="3" fill="white" opacity="0.3" />
+</svg>
