@@ -5,6 +5,7 @@ import Image from "next/image";
 import { ArrowRight, Bell, LayoutGrid, MessageSquare } from "lucide-react";
 import { FeatureCard } from "@/components/feature-card";
 import { LandingHeader } from "@/components/landing-header";
+import { LandingFooter } from "@/components/landing-footer";
 
 export default async function Home() {
   const session = await auth();
@@ -64,14 +65,15 @@ export default async function Home() {
               </div>
               <div className="mx-auto lg:mx-0 relative">
                 <div className="relative h-[350px] w-full overflow-hidden rounded-xl border bg-background shadow-xl dark:border-gray-800">
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 opacity-20 dark:opacity-30"></div>
-                  <Image
-                    src="/placeholder.svg?height=350&width=600"
-                    alt="Dashboard Preview"
-                    className="object-cover"
-                    width={600}
-                    height={350}
-                  />
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 opacity-50 dark:opacity-80">
+                    <Image
+                      src="/placeholder.svg?height=350&width=600"
+                      alt="Dashboard Preview"
+                      className="object-cover"
+                      width={600}
+                      height={350}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -136,6 +138,7 @@ export default async function Home() {
           </div>
         </section>
       </main>
+      <LandingFooter />
     </div>
   );
 }
