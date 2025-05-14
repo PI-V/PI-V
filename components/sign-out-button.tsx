@@ -7,9 +7,10 @@ import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 
 interface SignOutButtonProps {
   variant?: "default" | "dropdown";
+  className?: string;
 }
 
-export function SignOutButton({ variant = "default" }: SignOutButtonProps) {
+export function SignOutButton({ variant = "default", className }: SignOutButtonProps) {
   const handleSignOut = () => {
     signOut({ callbackUrl: "/" });
   };
@@ -27,7 +28,11 @@ export function SignOutButton({ variant = "default" }: SignOutButtonProps) {
   }
 
   return (
-    <Button onClick={handleSignOut} variant="destructive" className="w-full">
+    <Button 
+      onClick={handleSignOut} 
+      variant="destructive" 
+      className={className || "w-full"}
+    >
       Sair
     </Button>
   );

@@ -14,6 +14,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { User } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { SignOutButton } from "@/components/sign-out-button";
+import { ProfileSheet } from "@/components/profile-sheet";
 
 interface PrivateHeaderProps {
   user: {
@@ -83,13 +84,18 @@ export function PrivateHeader({ user }: PrivateHeaderProps) {
                 </div>
               </div>
               <DropdownMenuSeparator className="md:hidden" />
-              <DropdownMenuItem
-                onClick={() => router.push("/profile")}
-                className="cursor-pointer"
-              >
-                <User className="mr-2 h-4 w-4" />
-                Perfil
-              </DropdownMenuItem>
+              <ProfileSheet 
+                user={user} 
+                trigger={
+                  <DropdownMenuItem
+                    onSelect={(e) => e.preventDefault()}
+                    className="cursor-pointer"
+                  >
+                    <User className="mr-2 h-4 w-4" />
+                    Perfil
+                  </DropdownMenuItem>
+                }
+              />
               <DropdownMenuSeparator />
               <SignOutButton variant="dropdown" />
             </DropdownMenuContent>
