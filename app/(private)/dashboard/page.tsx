@@ -4,15 +4,8 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { ActivityLogList } from "@/components/activity-log-list";
+import { BoardCard } from "@/components/board-card";
 
 export default async function Dashboard() {
   const session = await auth();
@@ -57,27 +50,7 @@ export default async function Dashboard() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {boards.map((board) => (
-            <Link href={`/dashboard/boards/${board.id}`} key={board.id}>
-              <Card className="h-full hover:border-primary/50 transition-colors">
-                <CardHeader>
-                  <CardTitle>{board.title}</CardTitle>
-                  {board.description && (
-                    <CardDescription>{board.description}</CardDescription>
-                  )}
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground">
-                    Criado em{" "}
-                    {new Date(board.createdAt).toLocaleDateString("pt-BR")}
-                  </p>
-                </CardContent>
-                <CardFooter>
-                  <Button variant="default" className="w-full">
-                    Abrir quadro
-                  </Button>
-                </CardFooter>
-              </Card>
-            </Link>
+            <BoardCard key={board.id} board={board} />
           ))}
         </div>
       )}
