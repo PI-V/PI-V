@@ -7,7 +7,7 @@ export function LandingFooter() {
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
           <div className="space-y-4">
             <Link href="/" className="flex items-center gap-2">
-              <span className="text-xl font-bold">KanbanApp</span>
+              <span className="text-xl font-bold">KanbanAI</span>
             </Link>
             <p className="text-sm text-gray-500 dark:text-gray-400">
               Gerencie projetos com notificações via WhatsApp
@@ -16,7 +16,7 @@ export function LandingFooter() {
         </div>
         <div className="mt-8 border-t pt-4">
           <p className="text-center text-xs text-gray-500 dark:text-gray-400">
-            &copy; {new Date().getFullYear()} KanbanApp. Todos os direitos
+            &copy; {new Date().getFullYear()} KanbanAI. Todos os direitos
             reservados.
           </p>
         </div>

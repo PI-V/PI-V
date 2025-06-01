@@ -10,7 +10,7 @@ export async function LandingHeader() {
     <header className="w-full border-b bg-background flex justify-center">
       <div className="container flex h-16 items-center px-4 md:px-6">
         <Link href="/" className="flex items-center gap-2">
-          <span className="text-xl font-bold">KanbanApp</span>
+          <span className="text-xl font-bold">KanbanAI</span>
         </Link>
         <div className="ml-auto flex items-center gap-2">
           <ModeToggle />

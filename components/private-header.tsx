@@ -42,7 +42,7 @@ export function PrivateHeader({ user }: PrivateHeaderProps) {
     <header className="w-full border-b bg-background">
       <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
         <Link href="/dashboard" className="flex items-center gap-2">
-          <span className="text-xl font-bold">KanbanApp</span>
+          <span className="text-xl font-bold">KanbanAI</span>
         </Link>
 
         <div className="flex items-center gap-4">
