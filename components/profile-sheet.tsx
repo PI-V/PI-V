@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
-  SheetClose,
   SheetContent,
   SheetDescription,
   SheetFooter,
@@ -15,7 +14,6 @@ import { SignOutButton } from "@/components/sign-out-button";
 import { User } from "lucide-react";
 import Image from "next/image";
 import { memo } from "react";
-import { useRouter } from "next/navigation";
 
 interface ProfileSheetProps {
   user: {
@@ -27,7 +25,6 @@ interface ProfileSheetProps {
 }
 
 const ProfileSheetComponent = ({ user, trigger }: ProfileSheetProps) => {
-  const router = useRouter();
 
   return (
     <Sheet>

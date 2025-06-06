@@ -77,7 +77,6 @@ export function NotificationTemplateEditor({
   const [showAIImprovement, setShowAIImprovement] = useState(false);
   const [improvedTemplate, setImprovedTemplate] = useState<string | null>(null);
   const [isImprovingTemplate, setIsImprovingTemplate] = useState(false);
-  const [currentStyle, setCurrentStyle] = useState<string>("criativo");
 
   const queryClient = useQueryClient();
 
@@ -271,7 +270,6 @@ Hora: {{time}}`;
 
     setIsImprovingTemplate(true);
     setShowAIImprovement(true);
-    setCurrentStyle(style);
 
     try {
       const response = await fetch("/api/ai/improve-template", {
