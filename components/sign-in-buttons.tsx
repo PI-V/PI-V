@@ -9,7 +9,8 @@ export function SignInButtons() {
     <div className="flex flex-col space-y-4">
       <Button
         variant="outline"
-        className="flex items-center justify-center gap-2 w-full py-6 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600 hover:bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-colors"
+        size="lg"
+        className="w-full"
         onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
       >
         <Image
@@ -17,8 +18,9 @@ export function SignInButtons() {
           alt="Google Logo"
           width={20}
           height={20}
+          className="mr-2"
         />
-        <span className="dark:text-white">Continuar com Google</span>
+        Continuar com Google
       </Button>
     </div>
   );

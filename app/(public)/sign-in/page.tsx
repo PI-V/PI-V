@@ -1,42 +1,37 @@
+"use client";
+
 import { SignInButtons } from "@/components/sign-in-buttons";
 import Link from "next/link";
-import { auth } from "@/lib/auth";
-import { redirect } from "next/navigation";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
-export default async function SignInPage() {
-  const session = await auth();
-
-  if (session?.user) {
-    redirect("/dashboard");
-  }
-
+export default function SignInPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-white dark:bg-gray-800 rounded-xl shadow-xl overflow-hidden">
-        <div className="p-8">
+      <Card className="w-full max-w-sm">
+        <CardHeader className="space-y-1">
+          <CardTitle className="text-2xl text-center">Bem-vindo</CardTitle>
+          <CardDescription className="text-center">
+            Faça login para acessar sua conta
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <SignInButtons />
           <div className="text-center">
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-              Bem-vindo
-            </h1>
-            <p className="text-gray-600 dark:text-gray-300">
-              Faça login para acessar sua conta
-            </p>
+            <Link
+              href="/"
+              className="text-sm text-muted-foreground hover:text-primary hover:underline"
+            >
+              Voltar para a página inicial
+            </Link>
           </div>
-
-          <div className="mt-8">
-            <SignInButtons />
-
-            <div className="mt-6 text-center">
-              <Link
-                href="/"
-                className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline"
-              >
-                Voltar para a página inicial
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

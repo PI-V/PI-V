@@ -1,24 +1,45 @@
+"use client";
+
 import { auth } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ActivityLogList } from "@/components/activity-log-list";
 import { BoardCard } from "@/components/board-card";
+import { useBoards } from "@/hooks/use-boards";
+import { Skeleton } from "@/components/ui/skeleton";
+import { BoardType } from "@/app/(private)/dashboard/boards/[id]/board-detail";
 
-export default async function Dashboard() {
-  const session = await auth();
+// Type adapter to transform BoardType to the format expected by BoardCard
+function adaptBoard(board: BoardType) {
+  return {
+    id: board.id,
+    title: board.title,
+    description: board.description ?? null,
+    createdAt: board.createdAt,
+    updatedAt: board.updatedAt,
+  };
+}
 
-  if (!session?.user) {
-    redirect("/sign-in");
+export default function Dashboard() {
+  const { data: boards, isLoading } = useBoards();
+
+  if (isLoading) {
+    return (
+      <div className="container mx-auto p-6">
+        <div className="flex justify-between items-center mb-8">
+          <Skeleton className="h-10 w-48" />
+          <Skeleton className="h-10 w-32" />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[1, 2, 3].map((i) => (
+            <Skeleton key={i} className="h-48 w-full" />
+          ))}
+        </div>
+      </div>
+    );
   }
-
-  // Fetch user's boards
-  const boards = await prisma.board.findMany({
-    where: { userId: session.user.id },
-    orderBy: { updatedAt: "desc" },
-  });
 
   return (
     <div className="container mx-auto p-6">
@@ -32,7 +53,7 @@ export default async function Dashboard() {
         </Link>
       </div>
 
-      {boards.length === 0 ? (
+      {!boards || boards.length === 0 ? (
         <div className="text-center p-12 bg-muted rounded-lg">
           <h2 className="text-2xl font-medium mb-4">
             Você não tem quadros ainda
@@ -50,7 +71,7 @@ export default async function Dashboard() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {boards.map((board) => (
-            <BoardCard key={board.id} board={board} />
+            <BoardCard key={board.id} board={adaptBoard(board)} />
           ))}
         </div>
       )}

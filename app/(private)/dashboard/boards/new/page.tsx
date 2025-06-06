@@ -19,7 +19,7 @@ import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useMutation } from "@tanstack/react-query";
+import { useCreateBoard } from "@/hooks/use-boards";
 
 // Define the Zod schema for board creation
 const boardSchema = z.object({
@@ -37,24 +37,6 @@ const boardSchema = z.object({
 // TypeScript type derived from the Zod schema
 type BoardFormValues = z.infer<typeof boardSchema>;
 
-// API client function for creating a board
-const createBoard = async (data: BoardFormValues) => {
-  const response = await fetch("/api/boards", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  });
-
-  if (!response.ok) {
-    const responseData = await response.json();
-    throw new Error(responseData.error || "Erro ao criar o quadro");
-  }
-
-  return response.json();
-};
-
 export default function NewBoardPage() {
   const router = useRouter();
 
@@ -71,22 +53,21 @@ export default function NewBoardPage() {
     },
   });
 
-  // Setup mutation for creating a board
-  const { mutate, isPending } = useMutation({
-    mutationFn: createBoard,
-    onSuccess: (board) => {
-      toast.success("Quadro criado com sucesso!");
-      router.push(`/dashboard/boards/${board.id}`);
-    },
-    onError: (err) => {
-      toast.error(
-        err instanceof Error ? err.message : "Erro ao criar o quadro"
-      );
-    },
-  });
+  // Setup mutation for creating a board using our custom hook
+  const { mutate, isPending } = useCreateBoard();
 
   const onSubmit = (data: BoardFormValues) => {
-    mutate(data);
+    mutate(data, {
+      onSuccess: (board) => {
+        toast.success("Quadro criado com sucesso!");
+        router.push(`/dashboard/boards/${board.id}`);
+      },
+      onError: (err) => {
+        toast.error(
+          err instanceof Error ? err.message : "Erro ao criar o quadro"
+        );
+      },
+    });
   };
 
   return (
