@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
-import { ActivityLogType } from "@prisma/client";
+import { ActivityLogType } from "@/lib/generated/prisma";
 
 export async function GET(
   req: Request,
