@@ -60,9 +60,9 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { id } = await params;
-
   try {
+    const { id } = await params;
+
     // First check if column exists and belongs to user's board
     const column = await prisma.column.findUnique({
       where: { id: id },

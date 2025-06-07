@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { User } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { SignOutButton } from "@/components/sign-out-button";
 import { ProfileSheet } from "@/components/profile-sheet";
 
@@ -25,7 +24,6 @@ interface PrivateHeaderProps {
 }
 
 export function PrivateHeader({ user }: PrivateHeaderProps) {
-  const router = useRouter();
 
   // Generate initials for avatar fallback
   const getInitials = (name?: string | null) => {

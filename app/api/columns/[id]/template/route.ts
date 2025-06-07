@@ -2,10 +2,11 @@ import { NextResponse } from "next/server";
 
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
+import { ActivityLogType } from "@prisma/client";
 
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const user = await getCurrentUser();
@@ -14,7 +15,7 @@ export async function GET(
       return new NextResponse("Não autorizado", { status: 401 });
     }
 
-    const columnId = params.id;
+    const { id: columnId } = await params;
 
     // Verify column exists and user has access to it
     const column = await prisma.column.findUnique({
@@ -46,7 +47,7 @@ export async function GET(
 
 export async function POST(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const user = await getCurrentUser();
@@ -55,7 +56,7 @@ export async function POST(
       return new NextResponse("Não autorizado", { status: 401 });
     }
 
-    const columnId = params.id;
+    const { id: columnId } = await params;
     const { template, isActive } = await req.json();
 
     // Verify column exists and user has access to it
@@ -96,10 +97,8 @@ export async function POST(
     await prisma.activityLog.create({
       data: {
         userId: user.id,
-        action: "create",
+        type: ActivityLogType.COLUMN_UPDATED,
         description: `Criou template de notificação para coluna: ${column.title}`,
-        entityType: "NotificationTemplate",
-        entityId: newTemplate.id,
       },
     });
 
@@ -112,7 +111,7 @@ export async function POST(
 
 export async function PUT(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const user = await getCurrentUser();
@@ -121,7 +120,7 @@ export async function PUT(
       return new NextResponse("Não autorizado", { status: 401 });
     }
 
-    const columnId = params.id;
+    const { id: columnId } = await params;
     const { template, isActive } = await req.json();
 
     // Verify column exists and user has access to it
@@ -156,10 +155,8 @@ export async function PUT(
     await prisma.activityLog.create({
       data: {
         userId: user.id,
-        action: "update",
-        description: `Atualizou template de notificação para coluna: ${column.title}`,
-        entityType: "NotificationTemplate",
-        entityId: updatedTemplate.id,
+        type: ActivityLogType.COLUMN_UPDATED,
+        description: `Atualizou template de notificação para coluna: ${column.title}`
       },
     });
 
